@@ -87,10 +87,9 @@ void InitGameObjects(GameObject &player, GameObject &AI, GameObject &ball)
     ball.colliderOffset.X = ball.colliderOffset.Y = 0;
 }
 
-void InitVariables(float &speedBallX, float &speedBallY, bool &firstUPTouch, bool &firstDownTouch, bool &endGame)
+void InitVariables(float &speedBallX, float &speedBallY, bool &endGame)
 {
     speedBallX = speedBallY = 1.0;
-    firstUPTouch = firstDownTouch = true;
     endGame = false;
 }
 
@@ -112,10 +111,10 @@ void InitProgram()
 }
 
 void InitGame(GameObject &player, GameObject &AI, GameObject &ball,
-    float &speedBallX, float &speedBallY, bool &firstUPTouch, bool &firstDownTouch, bool &endGame)
+    float &speedBallX, float &speedBallY, bool &endGame)
 {
     InitGameObjects(player, AI, ball);
-    InitVariables(speedBallX, speedBallY, firstUPTouch, firstDownTouch, endGame);
+    InitVariables(speedBallX, speedBallY, endGame);
 }
 
 void SetConsoleCursorPos(int buffer, short x, short y)
@@ -286,11 +285,11 @@ LONGLONG GetTime()
 
 void GameLogic(GameObject &player, GameObject &AI, GameObject &ball, uint frameCount, double deltaTime, 
     float &speedBallX, float &speedBallY, int &dirBallX, int &dirBallY,
-    bool &firstUpTouch, bool &firstDownTouch, bool &endGame, bool &playerWon)
+    bool &endGame, bool &playerWon)
 {
     //// Logica del juego
     BallLogic(ball, player, AI, speedBallX, speedBallY, deltaTime, dirBallX, dirBallY);
-    PlayerLogic(player, deltaTime, firstUpTouch, firstDownTouch);
+    AILogic(player, ball, -dirBallY, speedBallX, speedBallY, deltaTime);
     AILogic(AI, ball, dirBallY, speedBallX, speedBallY, deltaTime);
 
     if (IsCollisionWithLeftConsole(ball))
@@ -338,8 +337,6 @@ int main()
     bool endProgram = false,
          endGame = false,
          playerWon,
-         firstUpTouch,
-         firstDownTouch,
          buildMenu = true;
     uint frameCount = 0;
     int dirBallX = -1,
@@ -363,13 +360,13 @@ int main()
         switch (input)
         {
         case '1':
-            InitGame(player, AI, ball, speedBallX, speedBallY, firstUpTouch, firstDownTouch, endGame);
+            InitGame(player, AI, ball, speedBallX, speedBallY, endGame);
             while (!endGame)
             {
                 frameCount++;
                 LONGLONG time = GetTime();
                 GameLogic(player, AI, ball, frameCount, deltaTime, speedBallX, speedBallY,
-                    dirBallX, dirBallY, firstUpTouch, firstDownTouch, endGame, playerWon);
+                    dirBallX, dirBallY, endGame, playerWon);
                 deltaTime = (GetTime() - time) / (double)1000000;
             }
             frameCount = 0;
