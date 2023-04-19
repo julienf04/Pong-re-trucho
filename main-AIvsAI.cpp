@@ -2,6 +2,8 @@
 #include <windows.h>
 #include <iostream>
 #include <conio.h>
+#include <time.h>
+#include <math.h>
 
 using namespace std;
 
@@ -27,7 +29,7 @@ struct GameObject
 };
 
 const int BUFFERS_LENGTH = 2;
-const HANDLE WINAPI BUFFERS[BUFFERS_LENGTH] =
+const HANDLE BUFFERS[BUFFERS_LENGTH] =
 {
 	GetStdHandle(STD_OUTPUT_HANDLE),
 	CreateConsoleScreenBuffer(GENERIC_WRITE, FILE_SHARE_WRITE, NULL, CONSOLE_TEXTMODE_BUFFER, NULL)
@@ -124,13 +126,13 @@ void InitGame(GameObject& player, GameObject& AI, GameObject& ball,
 
 void SetConsoleCursorPos(int buffer, short x, short y)
 {
-	COORD pos = { x, y };
+	COORD pos{ x, y };
 	SetConsoleCursorPosition(BUFFERS[buffer], pos);
 }
 
 COORD PosToCOORD(Pos pos)
 {
-	COORD coord = { pos.x, pos.y };
+	COORD coord{ (short)pos.x, (short)pos.y };
 	return coord;
 }
 
